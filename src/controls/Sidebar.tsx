@@ -4,6 +4,7 @@ import Divider from "@mui/material/Divider";
 
 import { DiceSetPicker } from "./DiceSetPicker";
 import { DicePicker } from "./DicePicker";
+import { DualityRollButton } from "./DualityRollButton";
 import { DiceExtras } from "./DiceExtras";
 import { DiceHidden } from "./DiceHidden";
 import { DiceHistory } from "./DiceHistory";
@@ -29,6 +30,7 @@ export function Sidebar() {
         <DiceSetPicker />
         <Divider flexItem sx={{ mx: 1 }} />
         <DicePicker />
+        <DualityRollButton />
         <Divider flexItem sx={{ mx: 1 }} />
         <DiceHidden />
         <DiceExtras />

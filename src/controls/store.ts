@@ -16,6 +16,7 @@ interface DiceControlsState {
   diceCounts: DiceCounts;
   diceBonus: number;
   diceAdvantage: Advantage;
+  diceDuality: boolean;
   diceHidden: boolean;
   diceRollPressTime: number | null;
   fairnessTesterOpen: boolean;
@@ -26,6 +27,7 @@ interface DiceControlsState {
   decrementDieCount: (id: string) => void;
   setDiceAdvantage: (advantage: Advantage) => void;
   setDiceBonus: (bonus: number) => void;
+  setDiceDuality: (duality: boolean) => void;
   toggleDiceHidden: () => void;
   setDiceRollPressTime: (time: number | null) => void;
   toggleFairnessTester: () => void;
@@ -43,6 +45,7 @@ export const useDiceControlsStore = create<DiceControlsState>()(
     diceCounts: initialDiceCounts,
     diceBonus: 0,
     diceAdvantage: null,
+    diceDuality: false,
     diceHidden: false,
     diceRollPressTime: null,
     fairnessTesterOpen: false,
@@ -103,6 +106,11 @@ export const useDiceControlsStore = create<DiceControlsState>()(
         state.diceAdvantage = advantage;
       });
     },
+    setDiceDuality(duality) {
+      set((state) => {
+        state.diceDuality = duality;
+      });
+    },
     toggleDiceHidden() {
       set((state) => {
         state.diceHidden = !state.diceHidden;
@@ -137,11 +145,12 @@ function getDiceByIdFromSet(diceSet: DiceSet) {
   return byId;
 }
 
-/** Generate new dice based off of a set of counts, advantage and die */
+/** Generate new dice based off of a set of counts, advantage, duality and die */
 export function getDiceToRoll(
   counts: DiceCounts,
   advantage: Advantage,
-  diceById: Record<string, Die>
+  diceById: Record<string, Die>,
+  duality: boolean = false
 ) {
   const dice: (Die | Dice)[] = [];
   const countEntries = Object.entries(counts);
@@ -152,7 +161,16 @@ export function getDiceToRoll(
     }
     const { style, type } = die;
     for (let i = 0; i < count; i++) {
-      if (advantage === null) {
+      if (duality && type === "D12") {
+        // Duality roll: Hope die (SUNRISE) and Fear die (SUNSET)
+        dice.push({
+          dice: [
+            { id: generateDiceId(), style: "SUNRISE", type: "D12" },
+            { id: generateDiceId(), style: "SUNSET", type: "D12" },
+          ],
+          combination: "DUALITY",
+        });
+      } else if (advantage === null) {
         if (type === "D100") {
           // Push a d100 and d10 when rolling a d100
           dice.push({

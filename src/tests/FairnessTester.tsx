@@ -91,7 +91,7 @@ export function FairnessTester() {
       const rollingDie = diceById[rolling[0]];
       if (rollingDie) {
         setRolledDie(rollingDie);
-        const dice = getDiceToRoll(counts, null, diceById);
+        const dice = getDiceToRoll(counts, null, diceById, false);
         startRoll({ dice, bonus: 0, hidden: true });
         setActive(true);
         handleCountsReset();

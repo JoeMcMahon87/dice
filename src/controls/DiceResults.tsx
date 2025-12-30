@@ -28,6 +28,72 @@ export function DiceResults({
     return getCombinedDiceValue(diceRoll, rollValues);
   }, [diceRoll, rollValues]);
 
+  const isDualityRoll = useMemo(() => {
+    // Check if the first element in dice array is a Dice object with DUALITY combination
+    if (diceRoll.dice && diceRoll.dice.length > 0) {
+      const firstDice = diceRoll.dice[0];
+      if (isDice(firstDice) && firstDice.combination === "DUALITY") {
+        return true;
+      }
+    }
+    return diceRoll.combination === "DUALITY";
+  }, [diceRoll]);
+
+  const dualityMessage = useMemo(() => {
+    if (!isDualityRoll || !diceRoll.dice || diceRoll.dice.length === 0) {
+      return null;
+    }
+
+    // Duality rolls have a nested structure: diceRoll.dice[0] is a Dice object
+    const dualityDice = diceRoll.dice[0];
+    
+    if (!isDice(dualityDice) || !dualityDice.dice || dualityDice.dice.length !== 2) {
+      return null;
+    }
+
+    const die1 = dualityDice.dice[0];
+    const die2 = dualityDice.dice[1];
+    
+    if (!isDie(die1) || !isDie(die2)) {
+      return null;
+    }
+
+    const hopeValue = die1.style === "SUNRISE" ? rollValues[die1.id] : rollValues[die2.id];
+    const fearValue = die1.style === "SUNSET" ? rollValues[die1.id] : rollValues[die2.id];
+
+    if (hopeValue === undefined || fearValue === undefined) {
+      return null;
+    }
+
+    let total = hopeValue + fearValue;
+
+    // Check for d6 modifier (advantage/disadvantage)
+    const advantageState = (dualityDice as any).advantage;
+    if (diceRoll.dice.length > 1 && advantageState) {
+      const modifierDie = diceRoll.dice[1];
+      if (isDie(modifierDie) && modifierDie.type === "D6") {
+        const modifierValue = rollValues[modifierDie.id];
+        if (modifierValue !== undefined) {
+          if (advantageState === "ADVANTAGE") {
+            // Advantage - add d6
+            total += modifierValue;
+          } else if (advantageState === "DISADVANTAGE") {
+            // Disadvantage - subtract d6
+            total -= modifierValue;
+          }
+        }
+      }
+    }
+
+    if (hopeValue > fearValue) {
+      return `${total} with Hope`;
+    } else if (fearValue > hopeValue) {
+      return `${total} with Fear`;
+    } else {
+      return "CRITICAL SUCCESS!";
+    }
+  }, [isDualityRoll, diceRoll, rollValues]);
+
   return (
     <Stack alignItems="center" maxHeight="calc(100vh - 100px)">
       <Tooltip
@@ -39,9 +105,27 @@ export function DiceResults({
           onClick={() => onExpand(!expanded)}
           color="inherit"
         >
-          <Typography variant="h4" color="white">
-            {finalValue}
-          </Typography>
+          {isDualityRoll && dualityMessage ? (
+            <Typography variant="h6" color="white">
+              {dualityMessage}
+            </Typography>
+          ) : isDualityRoll ? (
+            <Stack direction="row" gap={1} alignItems="center">
+              <Typography variant="h6" color="#FFD700">
+                Hope
+              </Typography>
+              <Typography variant="h6" color="white">
+                /
+              </Typography>
+              <Typography variant="h6" color="#DC143C">
+                Fear
+              </Typography>
+            </Stack>
+          ) : (
+            <Typography variant="h4" color="white">
+              {finalValue}
+            </Typography>
+          )}
         </Button>
       </Tooltip>
       <Grow
@@ -65,6 +149,8 @@ function combination(dice: Dice) {
     return "<";
   } else if (dice.combination === "NONE") {
     return ",";
+  } else if (dice.combination === "DUALITY") {
+    return "/";
   } else {
     return "+";
   }
@@ -73,7 +159,7 @@ function combination(dice: Dice) {
 function sortDice(
   die: Die[],
   rollValues: Record<string, number>,
-  combination: "HIGHEST" | "LOWEST" | "SUM" | "NONE" | undefined
+  combination: "HIGHEST" | "LOWEST" | "SUM" | "NONE" | "DUALITY" | undefined
 ) {
   return die.sort((a, b) => {
     const aValue = rollValues[a.id];
@@ -82,6 +168,8 @@ function sortDice(
       return bValue - aValue;
     } else if (combination === "LOWEST") {
       return aValue - bValue;
+    } else if (combination === "DUALITY") {
+      return a.style === "SUNRISE" ? -1 : 1;
     } else {
       return 0;
     }
@@ -102,23 +190,35 @@ function DiceResultsExpanded({
   );
   const dice = useMemo(() => diceRoll.dice.filter(isDice), [diceRoll]);
 
+  const isDualityRoll = diceRoll.combination === "DUALITY";
+
   return (
     <Stack divider={<Divider />} gap={1}>
       <Stack direction="row" flexWrap="wrap" gap={1} justifyContent="center">
         {die.map((d, i) => (
-          <Stack direction="row" key={d.id} gap={1}>
+          <Stack direction="row" key={d.id} gap={1} alignItems="center">
+            {isDualityRoll && i === 0 && (
+              <Typography lineHeight="28px" color="#FFD700" fontWeight="bold">
+                Hope:
+              </Typography>
+            )}
+            {isDualityRoll && i === 1 && (
+              <Typography lineHeight="28px" color="#DC143C" fontWeight="bold">
+                Fear:
+              </Typography>
+            )}
             <DicePreview diceStyle={d.style} diceType={d.type} size="small" />
             <Typography lineHeight="28px" color="white">
               {rollValues[d.id]}
             </Typography>
-            {i < die.length - 1 && (
+            {i < die.length - 1 && !isDualityRoll && (
               <Typography lineHeight="28px" color="white">
                 {combination(diceRoll)}
               </Typography>
             )}
           </Stack>
         ))}
-        {die.length > 0 && (
+        {die.length > 0 && !isDualityRoll && (
           <>
             <Typography lineHeight="28px" color="white">
               =

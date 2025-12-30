@@ -25,7 +25,7 @@ export function PreviewDiceRoll() {
   );
 
   const diceRoll = useMemo<DiceRoll>(() => {
-    return { dice: getDiceToRoll(counts, advantage, diceById) };
+    return { dice: getDiceToRoll(counts, advantage, diceById, false) };
   }, [counts, advantage, diceById]);
 
   const dice = useMemo(() => getDieFromDice(diceRoll), [diceRoll]);

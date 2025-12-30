@@ -2,6 +2,7 @@ import { DiceStyle } from "../types/DiceStyle";
 import { GalaxyMaterial } from "./galaxy/GalaxyMaterial";
 import { GemstoneMaterial } from "./gemstone/GemstoneMaterial";
 import { GlassMaterial } from "./glass/GlassMaterial";
+import { HopeMaterial } from "./hope/HopeMaterial";
 import { IronMaterial } from "./iron/IronMaterial";
 import { NebulaMaterial } from "./nebula/NebulaMaterial";
 import { SunriseMaterial } from "./sunrise/SunriseMaterial";
@@ -16,6 +17,8 @@ export function DiceMaterial({ diceStyle }: { diceStyle: DiceStyle }) {
       return <GemstoneMaterial />;
     case "GLASS":
       return <GlassMaterial />;
+    case "HOPE":
+      return <HopeMaterial />;
     case "IRON":
       return <IronMaterial />;
     case "NEBULA":
