@@ -4,6 +4,7 @@ import Stack from "@mui/material/Stack";
 
 import { useDiceControlsStore } from "./store";
 import { useDiceRollStore } from "../dice/store";
+import dualityIcon from "../previews/duality.png";
 
 export function DualityRollButton() {
   const startRoll = useDiceRollStore((state) => state.startRoll);
@@ -68,26 +69,17 @@ export function DualityRollButton() {
           p: 0,
           width: "44px",
           height: "44px",
-          borderRadius: "8px",
-          background: "linear-gradient(135deg, #FFD700 50%, #DC143C 50%)",
-          "&:hover": {
-            background: "linear-gradient(135deg, #FFC700 50%, #CC0A2C 50%)",
-          },
         }}
       >
-        <Stack
-          direction="row"
-          sx={{
-            width: "100%",
-            height: "100%",
-            alignItems: "center",
-            justifyContent: "center",
+        <img
+          src={dualityIcon}
+          alt="Duality Roll"
+          style={{
+            width: "44px",
+            height: "44px",
+            objectFit: "contain",
           }}
-        >
-          <span style={{ fontSize: "20px", fontWeight: "bold", color: "white" }}>
-            2d12
-          </span>
-        </Stack>
+        />
       </IconButton>
     </Tooltip>
   );
