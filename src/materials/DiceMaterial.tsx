@@ -17,8 +17,6 @@ export function DiceMaterial({ diceStyle }: { diceStyle: DiceStyle }) {
       return <GemstoneMaterial />;
     case "GLASS":
       return <GlassMaterial />;
-    case "HOPE":
-      return <HopeMaterial />;
     case "IRON":
       return <IronMaterial />;
     case "NEBULA":
