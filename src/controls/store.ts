@@ -162,11 +162,11 @@ export function getDiceToRoll(
     const { style, type } = die;
     for (let i = 0; i < count; i++) {
       if (duality && type === "D12") {
-        // Duality roll: Hope die (SUNRISE) and Fear die (SUNSET)
+        // Duality roll: Hope die (HOPE) and Fear die (FEAR)
         dice.push({
           dice: [
-            { id: generateDiceId(), style: "SUNRISE", type: "D12" },
-            { id: generateDiceId(), style: "SUNSET", type: "D12" },
+            { id: generateDiceId(), style: "HOPE", type: "D12" },
+            { id: generateDiceId(), style: "FEAR", type: "D12" },
           ],
           combination: "DUALITY",
         });

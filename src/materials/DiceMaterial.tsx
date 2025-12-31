@@ -1,4 +1,5 @@
 import { DiceStyle } from "../types/DiceStyle";
+import { FearMaterial } from "./fear/FearMaterial";
 import { GalaxyMaterial } from "./galaxy/GalaxyMaterial";
 import { GemstoneMaterial } from "./gemstone/GemstoneMaterial";
 import { GlassMaterial } from "./glass/GlassMaterial";
@@ -11,12 +12,16 @@ import { WalnutMaterial } from "./walnut/WalnutMaterial";
 
 export function DiceMaterial({ diceStyle }: { diceStyle: DiceStyle }) {
   switch (diceStyle) {
+    case "FEAR":
+      return <FearMaterial />;
     case "GALAXY":
       return <GalaxyMaterial />;
     case "GEMSTONE":
       return <GemstoneMaterial />;
     case "GLASS":
       return <GlassMaterial />;
+    case "HOPE":
+      return <HopeMaterial />;
     case "IRON":
       return <IronMaterial />;
     case "NEBULA":

@@ -24,11 +24,11 @@ export function DualityRollButton() {
   function handleDualityRoll() {
     clearRollIfNeeded();
     
-    // Create a duality roll with SUNRISE and SUNSET d12 dice
+    // Create a duality roll with HOPE and FEAR d12 dice
     const dualityDice: any = {
       dice: [
-        { id: `duality-hope-${Date.now()}`, style: "SUNRISE" as const, type: "D12" as const },
-        { id: `duality-fear-${Date.now()}`, style: "SUNSET" as const, type: "D12" as const },
+        { id: `duality-hope-${Date.now()}`, style: "HOPE" as const, type: "D12" as const },
+        { id: `duality-fear-${Date.now()}`, style: "FEAR" as const, type: "D12" as const },
       ],
       combination: "DUALITY" as const,
     };

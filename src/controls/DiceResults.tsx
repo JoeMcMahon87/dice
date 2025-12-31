@@ -58,8 +58,8 @@ export function DiceResults({
       return null;
     }
 
-    const hopeValue = die1.style === "SUNRISE" ? rollValues[die1.id] : rollValues[die2.id];
-    const fearValue = die1.style === "SUNSET" ? rollValues[die1.id] : rollValues[die2.id];
+    const hopeValue = die1.style === "HOPE" ? rollValues[die1.id] : rollValues[die2.id];
+    const fearValue = die1.style === "FEAR" ? rollValues[die1.id] : rollValues[die2.id];
 
     if (hopeValue === undefined || fearValue === undefined) {
       return null;
@@ -169,7 +169,7 @@ function sortDice(
     } else if (combination === "LOWEST") {
       return aValue - bValue;
     } else if (combination === "DUALITY") {
-      return a.style === "SUNRISE" ? -1 : 1;
+      return a.style === "HOPE" ? -1 : 1;
     } else {
       return 0;
     }

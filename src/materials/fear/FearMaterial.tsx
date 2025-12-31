@@ -5,7 +5,7 @@ import orm from "./orm.jpg";
 import normal from "./normal.jpg";
 import { gltfTexture } from "../../helpers/gltfTexture";
 
-export function HopeMaterial(
+export function FearMaterial(
   props: JSX.IntrinsicElements["meshStandardMaterial"]
 ) {
   const [albedoMap, ormMap, normalMap] = useTexture(
@@ -19,8 +19,7 @@ export function HopeMaterial(
       roughnessMap={ormMap}
       metalnessMap={ormMap}
       normalMap={normalMap}
-      metalness={0.7}
-      color="#aaaaaa"
+      metalness={1}
       {...props}
     />
   );
